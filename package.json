@@ -3,17 +3,19 @@
     "@types/express": "^4.17.15",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "nodemon": "^2.0.20"
   },
   "name": "apirestmysql",
   "description": "* Typescript\r * Node js\r * Mysql\r * Docker",
   "version": "1.0.0",
   "devDependencies": {
+    "ts-node": "^10.9.1",
     "typescript": "^4.9.4"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc && node dist/app.js"
+    "dev": "nodemon -T app.ts"
   },
   "repository": {
     "type": "git",
