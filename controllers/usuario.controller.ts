@@ -41,18 +41,82 @@ export const getUsuarioById = async (req: Request, res: Response) => {
 
 export const postUsuarios = async (req: Request, res: Response) => {
   const body = req.body;
-  res.status(200).json({
-    ok: true,
-    msg: "postUsuarios",
-    body,
-  });
+
+  try {
+    const existeEmail = await Usuario.findOne({
+      where: {
+        email: body.email,
+      },
+    });
+    if (existeEmail) {
+      const resp: ResponseApi = {
+        data: null,
+        success: false,
+        msg: "Ya existe un usuario con ese email",
+      };
+      return res.status(400).json(resp);
+    }
+
+    const usuario = await Usuario.create(body);
+    const resp: ResponseApi = {
+      data: usuario,
+      success: true,
+      msg: "Usuario creado",
+    };
+    res.status(201).json(resp);
+  } catch (error) {
+    const Errorresp = {
+      data: null,
+      success: false,
+      msg: "Hable con el administrador",
+    };
+    res.status(500).json(Errorresp);
+  }
 };
 
 export const putUsuarios = async (req: Request, res: Response) => {
-  res.status(200).json({
-    ok: true,
-    msg: "putUsuarios",
-  });
+  const idUser = req.params.id;
+  const body = req.body;
+  try {
+    const usuario = await Usuario.findByPk(idUser);
+    const existeEmail = await Usuario.findOne({
+      where: {
+        email: body.email,
+        id: !idUser,
+      },
+    });
+
+    if (existeEmail) {
+      const resp: ResponseApi = {
+        data: null,
+        success: false,
+        msg: "Ya existe un usuario con ese email",
+      };
+      return res.status(400).json(resp);
+    }
+
+    if (!usuario) {
+      const resp: ResponseApi = {
+        data: null,
+        success: false,
+        msg: "No existe un usuario con ese id",
+      };
+      return res.status(404).json(resp);
+    }
+
+    await usuario.update(body);
+    const resp: ResponseApi = {
+      data: usuario,
+      success: true,
+      msg: "Usuario actualizado",
+    };
+    res.status(200).json(resp);
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      msg: "Hable con el administrador",
+    });
+  }
 };
 
 export const deleteUsuarios = async (req: Request, res: Response) => {
