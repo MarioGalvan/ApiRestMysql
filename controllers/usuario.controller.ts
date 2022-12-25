@@ -3,7 +3,11 @@ import { ResponseApi } from "../interfaces/api.interface";
 import { Usuario } from "../models/usuario.model";
 
 export const getUsuarios = async (req: Request, res: Response) => {
-  const usuarios = await Usuario.findAll();
+  const usuarios = await Usuario.findAll({
+    where: {
+      estado: true,
+    },
+  });
   let resp: ResponseApi = {
     data: usuarios,
     success: true,
@@ -120,8 +124,29 @@ export const putUsuarios = async (req: Request, res: Response) => {
 };
 
 export const deleteUsuarios = async (req: Request, res: Response) => {
-  res.status(200).json({
-    ok: true,
-    msg: "deleteUsuarios",
+  const idUser = req.params.id;
+  const usuario = await Usuario.findByPk(idUser);
+  if (!usuario) {
+    const resp: ResponseApi = {
+      data: null,
+      success: false,
+      msg: "No existe un usuario con ese id",
+    };
+    return res.status(404).json(resp);
+  }
+
+  await usuario.update({
+    estado: false,
   });
+  const resp: ResponseApi = {
+    data: usuario,
+    success: true,
+    msg: "Usuario eliminado",
+  };
+  res.status(200).json(resp);
+
+  // res.status(200).json({
+  //   ok: true,
+  //   msg: "deleteUsuarios",
+  // });
 };
