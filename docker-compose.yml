@@ -1,11 +1,13 @@
-version: '1.0'
+version: '3'
+
 services:
-  mysql:
-    image: mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: test
-      MYSQL_USER: test
-      MYSQL_PASSWORD: test
-    volumes:
-      - ./mysql:/var/lib/mysql
+    teachteam-mysql-db:
+        image: mysql:5.7
+        container_name: curso-mysql-db
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_USER: admin
+            MYSQL_PASSWORD: root
+            MYSQL_ROOT_HOST: '%'
