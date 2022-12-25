@@ -6,3 +6,4 @@
 * Node js
 * Mysql
 * Docker
+* Sequelize
